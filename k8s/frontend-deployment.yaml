@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: pd-frontend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: pd-frontend
+
+  template:
+    metadata:
+      labels:
+        app: pd-frontend
+
+    spec:
+      containers:
+      - name: pd-frontend
+
+        image: tharun118wizard/pd-frontend:latest
+
+        ports:
+        - containerPort: 80

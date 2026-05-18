@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: pd-backend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: pd-backend
+
+  template:
+    metadata:
+      labels:
+        app: pd-backend
+
+    spec:
+      containers:
+      - name: pd-backend
+
+        image: tharun118wizard/pd-backend:latest
+
+        ports:
+        - containerPort: 5000

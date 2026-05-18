@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB = "tharun118wizard"
+    }
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/tharun118-wizard/PD-Devops-Project.git'
+            }
+        }
+
+        stage('Build Backend Docker Image') {
+            steps {
+                dir('backend') {
+                    sh 'docker build -t $DOCKER_HUB/pd-backend:latest .'
+                }
+            }
+        }
+
+        stage('Build Frontend Docker Image') {
+            steps {
+                dir('frontend') {
+                    sh 'docker build -t $DOCKER_HUB/pd-frontend:latest .'
+                }
+            }
+        }
+
+        stage('Docker Hub Login') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
+        stage('Push Backend Image') {
+            steps {
+                sh 'docker push $DOCKER_HUB/pd-backend:latest'
+            }
+        }
+
+        stage('Push Frontend Image') {
+            steps {
+                sh 'docker push $DOCKER_HUB/pd-frontend:latest'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
+        }
+    }
+}
