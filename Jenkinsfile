@@ -17,9 +17,11 @@ pipeline {
         stage('Build Backend Docker Image') {
             steps {
                 dir('backend') {
-docker build \
--t $DOCKER_HUB/pd-backend:$BUILD_NUMBER \
--t $DOCKER_HUB/pd-backend:latest .
+                    sh '''
+                    docker build \
+                    -t $DOCKER_HUB/pd-backend:$BUILD_NUMBER \
+                    -t $DOCKER_HUB/pd-backend:latest .
+                    '''
                 }
             }
         }
@@ -27,9 +29,11 @@ docker build \
         stage('Build Frontend Docker Image') {
             steps {
                 dir('frontend') {
-               docker build \
--t $DOCKER_HUB/pd-frontend:$BUILD_NUMBER \
--t $DOCKER_HUB/pd-frontend:latest .
+                    sh '''
+                    docker build \
+                    -t $DOCKER_HUB/pd-frontend:$BUILD_NUMBER \
+                    -t $DOCKER_HUB/pd-frontend:latest .
+                    '''
                 }
             }
         }
@@ -49,15 +53,19 @@ docker build \
 
         stage('Push Backend Image') {
             steps {
-         docker push $DOCKER_HUB/pd-backend:$BUILD_NUMBER
-         docker push $DOCKER_HUB/pd-backend:latest
+                sh '''
+                docker push $DOCKER_HUB/pd-backend:$BUILD_NUMBER
+                docker push $DOCKER_HUB/pd-backend:latest
+                '''
             }
         }
 
         stage('Push Frontend Image') {
             steps {
-            docker push $DOCKER_HUB/pd-frontend:$BUILD_NUMBER
-           docker push $DOCKER_HUB/pd-frontend:latest
+                sh '''
+                docker push $DOCKER_HUB/pd-frontend:$BUILD_NUMBER
+                docker push $DOCKER_HUB/pd-frontend:latest
+                '''
             }
         }
 
