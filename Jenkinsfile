@@ -17,8 +17,9 @@ pipeline {
         stage('Build Backend Docker Image') {
             steps {
                 dir('backend') {
-docker push $DOCKER_HUB/pd-backend:$BUILD_NUMBER
-docker push $DOCKER_HUB/pd-backend:latest
+docker build \
+-t $DOCKER_HUB/pd-backend:$BUILD_NUMBER \
+-t $DOCKER_HUB/pd-backend:latest .
                 }
             }
         }
@@ -48,7 +49,6 @@ docker push $DOCKER_HUB/pd-backend:latest
 
         stage('Push Backend Image') {
             steps {
-              docker build \
          docker push $DOCKER_HUB/pd-backend:$BUILD_NUMBER
          docker push $DOCKER_HUB/pd-backend:latest
             }
